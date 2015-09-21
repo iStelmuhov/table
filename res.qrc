@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/new/ico">
+        <file>ico/delete.png</file>
+        <file>ico/calendar-icons.png</file>
+        <file>ico/update.png</file>
+        <file>ico/add.png</file>
+    </qresource>
+    <qresource lang="russian" prefix="/str"/>
+</RCC>
