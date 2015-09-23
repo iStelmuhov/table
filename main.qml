@@ -248,15 +248,7 @@ Item{
             }
 
         }
-        Rectangle{
-            id:pastRect
-            anchors.fill: verticalList
-            color:Qt.rgba(0,0,0,0.2)
-                Component.onCompleted: {
-                    pastRect.visible=(modelData.dateTime<new Date().setHours(-24)) ? 1:0;
-                        print(Qt.formatDate(modelData.dateTime, "dd-MM")+" --- "+Qt.formatDate(new Date(),"dd-MM"));
-                }
-        }
+
         delegate:
             Rectangle{
             id:lessonRect
@@ -266,6 +258,14 @@ Item{
             opacity: 0.6
             onWidthChanged:groupListRect.width=gaussBlur.width;
 
+            Rectangle{
+                id:pastRect
+                anchors.fill: lessonRect
+                color:Qt.rgba(0,0,0,0.3)
+                    Component.onCompleted: {
+                        pastRect.visible=(modelData.startTime<new Date()) ? 1:0;
+                    }
+            }
 
             Column{
                 id:textColumn
@@ -309,7 +309,6 @@ Item{
     }
 }
 }
-
 }
 
 

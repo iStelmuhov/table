@@ -1,7 +1,7 @@
 #ifndef LESSON_H
 #define LESSON_H
 
-#include <QTime>
+
 #include <QtCore>
 
 struct Teacher{
@@ -17,8 +17,8 @@ private:
     QString m_brief;
     QString m_title;
 
-    QTime m_startTime;
-    QTime m_endTime;
+    QDateTime m_startTime;
+    QDateTime m_endTime;
 
     QString m_typeShort;
     QString m_typeFull;
@@ -32,7 +32,7 @@ private:
 
 public:
     Lesson();
-    Lesson(QString _brief,QString _title,QTime _start,QTime _end,
+    Lesson(QString _brief,QString _title,QDateTime _start,QDateTime _end,
            QString _typeShort,QString _typeFull,int _type,
            int _number,QString _auditory,
            QList<QVariant> _groups,QList<Teacher> _teachers);
@@ -45,13 +45,13 @@ public:
     QString title() const;
     void setTitle(const QString &title);
 
-    Q_PROPERTY(QTime startTime READ startTime WRITE setStartTime NOTIFY startTimeChanged)
-    QTime startTime() const;
-    void setStartTime(const QTime &startTime);
+    Q_PROPERTY(QDateTime startTime READ startTime WRITE setStartTime NOTIFY startTimeChanged)
+    QDateTime startTime() const;
+    void setStartTime(const QDateTime &startTime);
 
-    Q_PROPERTY(QTime endTime READ endTime WRITE setEndTime NOTIFY endTimeChanged)
-    QTime endTime() const;
-    void setEndTime(const QTime &endTime);
+    Q_PROPERTY(QDateTime endTime READ endTime WRITE setEndTime NOTIFY endTimeChanged)
+    QDateTime endTime() const;
+    void setEndTime(const QDateTime &endTime);
 
     Q_PROPERTY(QString typeShort READ typeShort WRITE setTypeShort NOTIFY typeShortChanged)
     QString typeShort() const;

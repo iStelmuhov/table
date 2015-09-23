@@ -48,7 +48,7 @@ QString Lesson::color()
 
 QString Lesson::lessonStartEndTime()
 {
-    return m_startTime.toString("hh:mm")+" — " + m_endTime.toString("hh:mm");
+    return m_startTime.time().toString("hh:mm")+" — " + m_endTime.time().toString("hh:mm");
 }
 
 Lesson::Lesson()
@@ -57,8 +57,8 @@ Lesson::Lesson()
     
 }
 
-Lesson::Lesson(QString _brief, QString _title, QTime _start, QTime _end,
-               QString _typeShort, QString _typeFull, int _type,int _number, QString _auditory,
+Lesson::Lesson(QString _brief, QString _title, QDateTime _start, QDateTime _end,
+               QString _typeShort, QString _typeFull, int _type, int _number, QString _auditory,
                QList<QVariant> _groups, QList<Teacher> _teachers)
     :m_brief(_brief),m_title(_title),m_startTime(_start),m_endTime(_end),
       m_typeShort(_typeShort),m_typeFull(_typeFull),m_type(_type),m_number_pair(_number),m_auditory(_auditory),
@@ -88,22 +88,22 @@ void Lesson::setTitle(const QString &title)
     m_title = title;
 }
 
-QTime Lesson::startTime() const
+QDateTime Lesson::startTime() const
 {
     return m_startTime;
 }
 
-void Lesson::setStartTime(const QTime &startTime)
+void Lesson::setStartTime(const QDateTime &startTime)
 {
     m_startTime = startTime;
 }
 
-QTime Lesson::endTime() const
+QDateTime Lesson::endTime() const
 {
     return m_endTime;
 }
 
-void Lesson::setEndTime(const QTime &endTime)
+void Lesson::setEndTime(const QDateTime &endTime)
 {
     m_endTime = endTime;
 }

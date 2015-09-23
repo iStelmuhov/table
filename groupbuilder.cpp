@@ -147,8 +147,8 @@ void GroupBuilder::build()
         m_days[QDateTime::fromTime_t(it.toObject()["start_time"].toInt(),QTimeZone::systemTimeZone()).date()]->setLesson(new Lesson(
         findItem(arraySubjects,(QString)"id",it.toObject()["subject_id"].toInt(),(QString)"brief").toString(),
         findItem(arraySubjects,(QString)"id",it.toObject()["subject_id"].toInt(),(QString)"title").toString(),
-        QDateTime::fromTime_t(it.toObject()["start_time"].toInt(),QTimeZone::systemTimeZone()).time(),
-        QDateTime::fromTime_t(it.toObject()["end_time"].toInt(),QTimeZone::systemTimeZone()).time(),
+        QDateTime::fromTime_t(it.toObject()["start_time"].toInt(),QTimeZone::systemTimeZone()),
+        QDateTime::fromTime_t(it.toObject()["end_time"].toInt(),QTimeZone::systemTimeZone()),
         findItem(arrayTypes,(QString)"id",it.toObject()["type"].toInt(),(QString)"short_name").toString(),
         findItem(arrayTypes,(QString)"id",it.toObject()["type"].toInt(),(QString)"full_name").toString(),
         it.toObject()["type"].toInt(),
