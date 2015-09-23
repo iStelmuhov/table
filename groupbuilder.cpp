@@ -67,11 +67,11 @@ void GroupBuilder::fileLoaded()
     build();
 }
 
-void GroupBuilder::buildRequest(QString _name, int _id)
+void GroupBuilder::buildRequest(QString _name, int _id,bool internet)
 {
     setName(_name);
     setId(_id);
-    setLoadFromInternet(true);
+    setLoadFromInternet(internet);
     getGroup();
 }
 
@@ -158,7 +158,7 @@ void GroupBuilder::build()
         findTeachers(arrayTeachers,(QString)"id",it.toObject()["teachers"].toArray(),(QString)"full_name",(QString)"short_name")
         ),it.toObject()["number_pair"].toInt()-min);
     }
-
+    emit rePaint();
 }
 
 GroupYearData *GroupBuilder::getGroup()
@@ -172,17 +172,10 @@ GroupYearData *GroupBuilder::getGroup()
         resultGroup->addDate(it);
 
     resultGroup->setName(name.toUpper());
-    GroupYearData * res =resultGroup;
+    resultGroup->setId(id);
 
-    reset();
-
-    emit groupReady(res);
-    return res;
-}
-
-void GroupBuilder::reset()
-{
-
+    emit groupReady(resultGroup);
+    return resultGroup;
 }
 
 bool GroupBuilder::getLoadFromInternet() const

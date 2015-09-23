@@ -33,6 +33,9 @@ public:
     QDate dateTime() const;
     void setDateTime(const QDate &dateTime);
 
+    Q_PROPERTY(QString dateTimeString READ dateTimeString NOTIFY dateTimeChanged)
+    QString dateTimeString() const;
+
     int getNumberMax();
     int getNumberMin();
 signals:

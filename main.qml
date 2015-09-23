@@ -1,21 +1,21 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.2
 import QtGraphicalEffects 1.0
-
+import QtQuick.Controls 1.2
+import QtQuick.Window 2.2
 
 Item{
     id:root
     width:800
     height:400
 
-
-
-
     Connections {
         target: programmModel
         onActiveChanged: {
-
+            horizontalList.model=0
             horizontalList.model=programmModel.active.list
+            horizontalList.currentIndex=programmModel.index;
+            horizontalList.positionViewAtIndex(programmModel.index,ListView.Right);
 
         }
     }
@@ -37,14 +37,11 @@ Item{
         }
     }
 
-    RowLayout
+    Row
     {
-        anchors.fill: parent
-        anchors.top:parent.top
-        anchors.left: parent.left
-        height: root.height
-        width:root.width
         id:row
+        anchors.fill: parent
+        spacing: 0
 
         Rectangle
         {
@@ -54,7 +51,8 @@ Item{
             anchors.bottom: row.bottom
 
             height:row.height
-            width:groupList.width
+            width:row.width/5
+
             opacity: 1
             color: "white"
             z:4
@@ -63,14 +61,13 @@ Item{
             {
                 id:gaussBlur
                 anchors.fill: groupList
-
                 radius:10
                 samples:20
                 deviation:4
 
                 source: ShaderEffectSource {
                     sourceItem: horizontalList
-                    sourceRect: Qt.rect(0, 0, groupList.width, groupList.height)
+                    sourceRect: Qt.rect(-groupList.width, 0, groupList.width, groupList.height)
                 }
             }
 
@@ -89,7 +86,7 @@ Item{
                  property int activeIndex :0;
                 header:Rectangle{
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width:row.width/5
+                    width:groupList.width
                     height:50
                     z:3
                     color:Qt.rgba(0, 0, 0, 0.05)
@@ -117,9 +114,11 @@ Item{
                 width:parent.width
                 height:45
                 color: Qt.rgba(0, 0, 0, 0.1)
-                Text{
+                Label{
                     anchors.fill: parent;
-                    verticalAlignment: Text.AlignVCenter;
+                    font.family: "Ubuntu"
+                    font.pixelSize: 14
+                    verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter;
                     text: modelData.name
                 }
@@ -133,13 +132,12 @@ Item{
                     onClicked:{
                         groupList.activeIndex=index;
                         groupList.currentIndex=index;
-                        programmModel.getNewIndex(index);
-                        horizontalList.currentIndex=programmModel.index-1;
-                        horizontalList.positionViewAtIndex(programmModel.index-1,ListView.Right);
+                        programmModel.getNewIndex(modelData.name);
+
                     }
                 }
 
-                                Component.onCompleted: height=(modelData.name==="") ? 0:45;
+               Component.onCompleted: height=(modelData.name==="") ? 0:45;
 
                 RowLayout{
                     id:groupLittleButtons
@@ -164,7 +162,12 @@ Item{
 
                             MouseArea{
                             anchors.fill: parent
-                            onClicked: console.log("!!!!");
+                            onClicked: {
+                                if(groupList.activeIndex==index)
+                                    groupList.activeIndex=0
+                                programmModel.update(modelData.name,modelData.id);
+
+                                }
                             }
 
                         }
@@ -184,7 +187,11 @@ Item{
 
                            MouseArea{
                                anchors.fill: parent
-                               onClicked: programmModel.deleteGroup(modelData.name);
+                               onClicked: {
+                                   if(groupList.activeIndex==index)
+                                       groupList.activeIndex=0
+                                   programmModel.deleteGroup(modelData.name);
+                           }
                            }
 
                        }
@@ -193,26 +200,29 @@ Item{
 
             }
         }
+
     }
     ListView
     {
         id:horizontalList
         height:root.height
-        width:root.width+800
+        width:Screen.width
         model:programmModel.active.list
         orientation: ListView.Horizontal
         anchors.top:row.top
         anchors.bottom: row.bottom
-        anchors.left:row.left
-        cacheBuffer: 400
+        displayMarginBeginning: 600
+        clip:true
+        cacheBuffer: 600
         snapMode: ListView.SnapToItem
+        antialiasing: true
         spacing: 3
         delegate:
             ListView{
 
             interactive: false
             id: verticalList
-            width: row.width/5
+            width: row.width/5.1
             height: parent.height
             model: modelData.dayList
             spacing:3
@@ -224,35 +234,68 @@ Item{
                 id:verticalHeader
                 width: verticalList.width
                 height: 36
-                color:"orange"
+                color:Qt.rgba(0.1490,0.7373,1,0.7)
                 border.color: "#ffffff"
-                border.width: 3
                 z:3
 
                 Text{
                     anchors.fill: parent
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    text:modelData.dateTime
+                    text:modelData.dateTimeString
                 }
 
             }
-        }
 
+        }
+        Rectangle{
+            id:pastRect
+            anchors.fill: verticalList
+            color:Qt.rgba(0,0,0,0.2)
+                Component.onCompleted: {
+                    pastRect.visible=(modelData.dateTime<new Date().setHours(-24)) ? 1:0;
+                        print(Qt.formatDate(modelData.dateTime, "dd-MM")+" --- "+Qt.formatDate(new Date(),"dd-MM"));
+                }
+        }
         delegate:
             Rectangle{
+            id:lessonRect
             width: verticalList.width
-            height:(root.height)/(programmModel.active.getNumberMax-programmModel.active.getNumberMin+1)-20
+            height:(root.height)/(programmModel.active.getNumberMax-programmModel.active.getNumberMin+1)-10
             color:modelData.color
             opacity: 0.6
             onWidthChanged:groupListRect.width=gaussBlur.width;
-            Text{
-                id: smallText
+
+
+            Column{
+                id:textColumn
                 anchors.fill: parent
-                verticalAlignment: Text.AlignVCenter;
+                clip:true
+                spacing:5
+            Label{
+                id:brief
+                width:parent.width
                 horizontalAlignment: Text.AlignHCenter;
                 elide: Text.ElideMiddle
-                text: modelData.title
+                font.family: "Ubuntu"
+                font.pixelSize: lessonRect.height/5
+                text: modelData.brief
+            }
+            Label{
+                width:parent.width
+                horizontalAlignment: Text.AlignHCenter;
+                font.family: "Ubuntu"
+                font.pixelSize: lessonRect.height/5
+                text:modelData.typeShort+', '+ modelData.auditory
+            }
+            Label{
+                width:parent.width
+                horizontalAlignment: Text.AlignHCenter;
+                font.family: "Ubuntu"
+                font.pixelSize: lessonRect.height/5
+                text: modelData.lessonStartEndTime
+                Component.onCompleted: textColumn.visible=(modelData.type===-1) ? 0:1;
+            }
             }
             MouseArea
             {
@@ -266,6 +309,7 @@ Item{
     }
 }
 }
+
 }
 
 

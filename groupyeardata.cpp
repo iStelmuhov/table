@@ -1,14 +1,25 @@
 #include "groupyeardata.h"
 #include "DayData.h"
 
+int GroupYearData::getId() const
+{
+    return m_id;
+}
+
+void GroupYearData::setId(int id)
+{
+    m_id = id;
+}
+
+
 GroupYearData::GroupYearData(QObject *parent) :
-    QObject(parent), m_dates(QList<DayData*>())
+    QObject(parent), m_dates(QList<DayData*>()),m_id(-1)
 {
 
 }
 
-GroupYearData::GroupYearData(QString _name, QObject *parent):
-QObject(parent), m_dates(QList<DayData*>()),groupName(_name)
+GroupYearData::GroupYearData(QString _name, int _id, QObject *parent):
+QObject(parent), m_dates(QList<DayData*>()),groupName(_name),m_id(_id)
 {
 
 }

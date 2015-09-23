@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     groupyeardata.cpp \
     lesson.cpp \
     qdownloader.cpp \
-    selectgroup.cpp
+    selectgroup.cpp \
+    configuration.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -29,7 +30,8 @@ HEADERS += \
     groupyeardata.h \
     lesson.h \
     qdownloader.h \
-    selectgroup.h
+    selectgroup.h \
+    configuration.h
 
 FORMS += \
     selectgroup.ui

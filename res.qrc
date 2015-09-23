@@ -5,5 +5,4 @@
         <file>ico/update.png</file>
         <file>ico/add.png</file>
     </qresource>
-    <qresource lang="russian" prefix="/str"/>
 </RCC>

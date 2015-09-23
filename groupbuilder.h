@@ -50,14 +50,13 @@ protected:
     bool getLoadFromInternet() const;
     void setLoadFromInternet(bool value);
 
-    void reset();
-
 signals:
     void jSonReady();
     void groupReady(GroupYearData * group);
+    void rePaint();
 public slots:
     void fileLoaded();
-    void buildRequest(QString _name,int _id);
+    void buildRequest(QString _name, int _id, bool internet=true);
 
 };
 

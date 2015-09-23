@@ -9,19 +9,29 @@
 #include <QDebug>
 #include "selectgroup.h"
 #include "groupbuilder.h"
+#include "configuration.h"
 
 int main(int argc, char *argv[])
 {    
-    QApplication app(argc, argv);
+    QApplication *app =new QApplication(argc, argv);
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setSource(QUrl("qrc:main.qml"));
     view.setIcon(QIcon(":/new/ico/ico/calendar-icons.png"));
     view.setTitle((QString)"TimeTable");
+
+
     GroupsData * Data = new GroupsData;
-    SelectGroup * selectWindow=new SelectGroup;
     Data->addGroup(new GroupYearData());
     Data->setActive(0);
+
+    Configuration * conf = new Configuration((QString)"conf.json",Data);
+    conf->readFromFile();
+    QObject::connect(conf,SIGNAL(newGroup(QString,int,bool)),Data,SLOT(newGroup(QString,int,bool)));
+    conf->loadInformationToGroupsData();
+
+    SelectGroup * selectWindow=new SelectGroup;
+
     QObject::connect(selectWindow,SIGNAL(groupSelected(QString,int)),Data,SLOT(newGroup(QString,int)));
 
     QQmlContext *ctxt = view.rootContext();
@@ -29,5 +39,7 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty("selectWindow", selectWindow);
     view.show();
 
-    return app.exec();
+    QObject::connect(app,SIGNAL(aboutToQuit()),conf,SLOT(writeToFile()));
+
+    return app->exec();
 }

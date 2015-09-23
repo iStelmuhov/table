@@ -48,6 +48,11 @@ void DayData::setDateTime(const QDate &dateTime)
     m_dateTime = dateTime;
 }
 
+QString DayData::dateTimeString() const
+{
+    return m_dateTime.toString("dd.MM,dddd");
+}
+
 int DayData::getNumberMax()
 {
     int max=INT_MIN;

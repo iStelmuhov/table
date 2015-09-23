@@ -45,6 +45,12 @@ QString Lesson::color()
     default:return "red";
     }
 }
+
+QString Lesson::lessonStartEndTime()
+{
+    return m_startTime.toString("hh:mm")+" — " + m_endTime.toString("hh:mm");
+}
+
 Lesson::Lesson()
     :m_type(-1),m_groups(QList<QVariant>()),m_teachers(QList<Teacher>())
 {

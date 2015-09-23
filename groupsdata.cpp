@@ -9,6 +9,12 @@ GroupsData::GroupsData(QObject *parent) :
 
 }
 
+GroupsData::~GroupsData()
+{
+    for(auto it:m_groups)
+        delete it;
+}
+
 const QList<GroupYearData *> &GroupsData::gropsList() const
 {
     return m_groups;
@@ -41,6 +47,7 @@ void GroupsData::deleteGroup(QString name)
                 if(activeGroup->name()==name)
                     setActive(0);
 
+            delete m_groups[i];
             m_groups.removeAt(i);
             emit listChanged();
         }
@@ -53,10 +60,40 @@ void GroupsData::deleteGroup(int _index)
         if(activeGroup->name()==m_groups.at(_index)->name())
            setActive(0);
 
+        delete m_groups[_index];
         m_groups.removeAt(_index);
         emit listChanged();
     }
 }
+
+void GroupsData::updateGroup(QString name)
+{
+    for(int i=0;i<m_groups.count();i++)
+        if(m_groups[i]->name()==name)
+        {
+            newGroup(m_groups[i]->name(),m_groups[i]->getId(),true);
+            return;
+        }
+}
+
+void GroupsData::rePaintList()
+{
+    emit activeChanched();
+}
+
+void GroupsData::update(QString _name, int _id)
+{
+    builder=new GroupBuilder;
+    connect(builder,SIGNAL(groupReady(GroupYearData*)),this,SLOT(addNewGroup(GroupYearData*)));
+    connect(builder,SIGNAL(rePaint()),this,SLOT(rePaintList()));
+    for(auto it:m_groups)
+       if(_name.toUpper()==it->name())
+            deleteGroup(it->name());
+
+    builder->buildRequest(_name,_id);
+}
+
+
 
 int GroupsData::index()
 {
@@ -72,9 +109,25 @@ int GroupsData::index()
     return 0;
 }
 
+int GroupsData::findGroup(QString name)
+{
+    for(int i=0;i<m_groups.count();i++)
+        if(m_groups[i]->name()==name)
+        {
+            return i;
+        }
+
+    return -1;
+}
+
 void GroupsData::getNewIndex(int _index)
 {
     setActive(_index);
+}
+
+void GroupsData::getNewIndex(QString name)
+{
+    getNewIndex(findGroup(name));
 }
 
 void GroupsData::addNewGroup(GroupYearData *_group)
@@ -83,16 +136,30 @@ void GroupsData::addNewGroup(GroupYearData *_group)
     emit listChanged();
 }
 
-void GroupsData::newGroup(QString _name, int _id)
+void GroupsData::newGroup(QString _name, int _id, bool internet)
 {
+    for(auto it:m_groups)
+       if(_name.toUpper()==it->name())
+            return;
 
     builder=new GroupBuilder;
     connect(builder,SIGNAL(groupReady(GroupYearData*)),this,SLOT(addNewGroup(GroupYearData*)));
-    for(auto it:m_groups)
-       if(_name.toUpper()==it->name())
-            deleteGroup(it->name());
+    connect(builder,SIGNAL(rePaint()),this,SLOT(rePaintList()));
 
-    builder->buildRequest(_name,_id);
+    builder->buildRequest(_name,_id,internet);
 
 }
 
+void GroupsData::newGroupFromFile(QString _name)
+{
+    for(auto it:m_groups)
+       if(_name.toUpper()==it->name())
+            return;
+
+    builder=new GroupBuilder;
+    connect(builder,SIGNAL(groupReady(GroupYearData*)),this,SLOT(addNewGroup(GroupYearData*)));
+    connect(builder,SIGNAL(rePaint()),this,SLOT(rePaintList()));
+
+    builder->buildRequest(_name,-1,false);
+
+}

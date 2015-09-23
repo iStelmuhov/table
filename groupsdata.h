@@ -17,7 +17,7 @@ private:
     GroupBuilder * builder;
 public:
     explicit GroupsData(QObject *parent = 0);
-
+    virtual ~GroupsData();
     Q_PROPERTY(QList<QObject*> gropsList READ listAsQObjects NOTIFY listChanged)
     const QList<GroupYearData*> &gropsList() const;
     QList<QObject*> listAsQObjects() const;
@@ -36,6 +36,7 @@ public:
     Q_PROPERTY(int index READ index NOTIFY indexChanged)
     int index();
 
+    int findGroup(QString name);
 
 signals:
     void nameChanged();
@@ -45,10 +46,15 @@ signals:
 
 public slots:
     void getNewIndex(int _index);
+    void getNewIndex(QString name);
     void addNewGroup(GroupYearData * _group);
-    void newGroup(QString,int);
+    void newGroup(QString, int, bool internet=true);
     void deleteGroup(QString name);
     void deleteGroup(int _index);
+    void updateGroup(QString name);
+    void rePaintList();
+    void update(QString,int);
+    void newGroupFromFile(QString);
 };
 
 #endif // GROUPSDATA_H

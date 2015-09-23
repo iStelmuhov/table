@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QtCore>
-
+#include "lesson.h"
 class DayData;
 
 class GroupYearData : public QObject
@@ -13,10 +13,10 @@ class GroupYearData : public QObject
 private:
     QList<DayData*> m_dates;
     QString groupName;
-
+    int m_id;
 public:
     GroupYearData(QObject *parent = 0);
-    GroupYearData(QString _name,QObject *parent = 0);
+    GroupYearData(QString _name,int _id,QObject *parent = 0);
 
     Q_PROPERTY(QList<QObject*> list READ listAsQObjects NOTIFY listChanged)
     const QList<DayData*> &list() const;
@@ -36,6 +36,11 @@ public:
     Q_PROPERTY(int getNumberMin READ getNumberMin NOTIFY getNumberMinChanged)
     int getNumberMin();
 
+    Q_PROPERTY(int id READ getId WRITE setId NOTIFY idChanged)
+    int getId() const;
+    void setId(int id);
+
+
 private:
     GroupYearData (const GroupYearData &);
     GroupYearData & operator = (const GroupYearData &);
@@ -45,6 +50,7 @@ signals:
     void nameChanged();
     void getNumberMinChanged();
     void getNumberMaxChanged();
+    void idChanged();
 public slots:
 };
 

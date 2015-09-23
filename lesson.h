@@ -84,6 +84,9 @@ public:
     Q_PROPERTY(QString color READ color NOTIFY colorChanged)
     QString color();
 
+    Q_PROPERTY(QString lessonStartEndTime READ lessonStartEndTime NOTIFY lessonStartEndTimeChanged)
+    QString lessonStartEndTime();
+
 signals:
     void briefChanged();
     void titleChanged();
@@ -97,6 +100,7 @@ signals:
     void teachersChanged();
     void typeChanged();
     void colorChanged();
+    void lessonStartEndTimeChanged();
 };
 
 #endif // LESSON_H
