@@ -17,7 +17,7 @@ private:
     GroupBuilder * builder;
 public:
     explicit GroupsData(QObject *parent = 0);
-    virtual ~GroupsData();
+    ~GroupsData();
     Q_PROPERTY(QList<QObject*> gropsList READ listAsQObjects NOTIFY listChanged)
     const QList<GroupYearData*> &gropsList() const;
     QList<QObject*> listAsQObjects() const;
@@ -30,8 +30,6 @@ public:
     void setActive(int index);
 
     void addGroup(GroupYearData * _data) {m_groups.append(_data);}
-
-
 
     Q_PROPERTY(int index READ index NOTIFY indexChanged)
     int index();

@@ -17,6 +17,7 @@ private:
 public:
     GroupYearData(QObject *parent = 0);
     GroupYearData(QString _name,int _id,QObject *parent = 0);
+    ~GroupYearData();
 
     Q_PROPERTY(QList<QObject*> list READ listAsQObjects NOTIFY listChanged)
     const QList<DayData*> &list() const;

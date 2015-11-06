@@ -16,6 +16,12 @@ DayData::DayData(QDate _date,QObject* parent)
 
 }
 
+DayData::~DayData()
+{
+    for(auto it:m_lessons)
+        delete it;
+}
+
 
 
 const QList<Lesson *> &DayData::dayList() const

@@ -24,6 +24,12 @@ QObject(parent), m_dates(QList<DayData*>()),groupName(_name),m_id(_id)
 
 }
 
+GroupYearData::~GroupYearData()
+{
+ for(auto it:m_dates)
+     delete it;
+}
+
 const QList<DayData *> &GroupYearData::list() const
 {
     return m_dates;

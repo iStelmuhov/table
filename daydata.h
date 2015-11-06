@@ -18,6 +18,7 @@ private:
 public:
     DayData(QObject * parent =0);
     DayData(QDate _date,QObject* parent = 0);
+    ~DayData();
 
     Q_PROPERTY(QList<QObject*> dayList READ listAsQObjects NOTIFY listChanged)
     const QList<Lesson*> &dayList() const;
