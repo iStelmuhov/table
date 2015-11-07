@@ -26,9 +26,9 @@
    <string>Выбор группы</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/new/ico/study.ico</normaloff>
-    <disabledoff>:/new/icon/study.ico</disabledoff>:/new/ico/study.ico</iconset>
+   <iconset resource="res.qrc">
+    <normaloff>:/new/ico/ico/graphics-editor.png</normaloff>
+    <disabledoff>:/new/icon/study.ico</disabledoff>:/new/ico/ico/graphics-editor.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QListWidget" name="listWidget">
@@ -125,9 +125,43 @@
      <string>Назад</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="refreshButton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>360</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Обновить</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="image">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>451</width>
+      <height>401</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

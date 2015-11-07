@@ -4,5 +4,7 @@
         <file>ico/calendar-icons.png</file>
         <file>ico/update.png</file>
         <file>ico/add.png</file>
+        <file>ico/Trex2.png</file>
+        <file>ico/graphics-editor.png</file>
     </qresource>
 </RCC>

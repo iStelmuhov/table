@@ -15,6 +15,7 @@ private:
     QList<GroupYearData*> m_groups;
     GroupYearData * activeGroup;
     GroupBuilder * builder;
+    bool m_isUpading;
 public:
     explicit GroupsData(QObject *parent = 0);
     ~GroupsData();
@@ -41,6 +42,7 @@ signals:
     void activeChanched();
     void listChanged();
     void indexChanged();
+    void groupLoaded();
 
 public slots:
     void getNewIndex(int _index);
@@ -53,6 +55,7 @@ public slots:
     void rePaintList();
     void update(QString,int);
     void newGroupFromFile(QString);
+    void changeStatus();
 };
 
 #endif // GROUPSDATA_H

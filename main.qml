@@ -4,28 +4,32 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 1.2
 import QtQuick.Window 2.2
 
-Item{
+ApplicationWindow {
+    visible:true
     id:root
     width:800
     height:400
+    title:"Khnure TimeTable"
 
+Rectangle{
+    id:layer0
+    anchors.fill:parent
     Connections {
         target: programmModel
+        onListChanged: {
+
+            groupList.model=programmModel.gropsList
+            groupList.currentIndex=groupList.activeIndex
+
+        }
         onActiveChanged: {
             horizontalList.model=0
             horizontalList.model=programmModel.active.list
             horizontalList.currentIndex=programmModel.index;
             horizontalList.positionViewAtIndex(programmModel.index,ListView.Right);
+        }
+    }
 
-        }
-    }
-    Connections {
-        target: programmModel
-        onListChanged: {
-            groupList.model=programmModel.gropsList
-            groupList.currentIndex=groupList.activeIndex
-        }
-    }
     Component {
         id: highlightComponent
 
@@ -104,7 +108,7 @@ Item{
                         anchors.fill:parent
                         onClicked:
                         {
-                            selectWindow.show()
+                           selectWindow.show()
                         }
                     }
                 }
@@ -125,7 +129,7 @@ Item{
                 MouseArea
                 {
                     anchors.fill: parent
-                    hoverEnabled :true
+                    hoverEnabled : true
 
                     onEntered: groupLittleButtons.opacity=1
                     onExited: groupLittleButtons.opacity=0
@@ -147,12 +151,14 @@ Item{
                     height:13
                     width:30
                     opacity:0
+
                     Rectangle
                       {
+                          id:updateButton
                           width:13
                           height:13
-
                           color: "transparent"
+
                           Image{
                                anchors.fill:parent
                                source:"qrc:/new/ico/ico/update.png"
@@ -161,12 +167,12 @@ Item{
                            }
 
                             MouseArea{
+                            id:updateArea
                             anchors.fill: parent
                             onClicked: {
                                 if(groupList.activeIndex==index)
                                     groupList.activeIndex=0
                                 programmModel.update(modelData.name,modelData.id);
-
                                 }
                             }
 
@@ -191,7 +197,7 @@ Item{
                                    if(groupList.activeIndex==index)
                                        groupList.activeIndex=0
                                    programmModel.deleteGroup(modelData.name);
-                           }
+                                }
                            }
 
                        }
@@ -301,13 +307,152 @@ Item{
             {
                 anchors.fill: parent
                 onClicked: {
-                    console.log(programmModel.active.count)
+                    if(textColumn.visible==1){
+                    extendedInfoList.model=modelData;
+                    extendedInfo.visible=true;
+                    }
                 }
 
             }
         }
     }
 }
+}
+}
+Rectangle{
+
+    x:groupListRect.width
+    y:0
+    width:root.width-groupListRect.width
+    height:root.height
+    id:extendedInfo
+    color:"white"
+    visible:false
+
+    GaussianBlur
+    {
+
+        anchors.fill: parent
+        radius:10
+        samples:20
+        deviation:4
+
+        source: ShaderEffectSource {
+            sourceItem: horizontalList
+            sourceRect: Qt.rect(0, 0, extendedInfo.width, extendedInfo.height)
+        }
+
+    }
+    ListView{
+        id:extendedInfoList
+        anchors.left:extendedInfo.horizontalCenter
+        anchors.bottom:extendedInfo.verticalCenter
+        anchors.bottomMargin:(root.height/2.5)/2
+        anchors.leftMargin: -(root.width/2.5)/2
+        delegate: Rectangle{
+
+            id:extendedInfoBox
+            border.width: 0.4
+            height:root.height/2.5
+            width:root.width/2.5
+
+            visible:true
+            color:modelData.color
+            opacity: 0.6
+            layer.enabled: true
+
+            Column{
+                anchors.fill: parent
+                clip:true
+                spacing:9
+                Label{
+                    font.bold: true
+                    width:parent.width
+                    opacity: 0.6
+                    horizontalAlignment: Text.AlignHCenter;
+                    elide: Text.ElideMiddle
+                    font.family: "Ubuntu"
+                    font.pixelSize: extendedInfoBox.height/11
+                    text: modelData.title
+                }
+                Label{
+                    width:parent.width
+                    horizontalAlignment: Text.AlignHCenter;
+                    font.family: "Ubuntu"
+                    font.pixelSize: extendedInfoBox.height/11
+                    text:modelData.typeFull+', '+ modelData.auditory
+                }
+                Label{
+                    width:parent.width
+                    horizontalAlignment: Text.AlignHCenter;
+                    font.family: "Ubuntu"
+                    font.pixelSize: extendedInfoBox.height/11
+                    text: modelData.lessonStartEndTime
+                }
+                Label{
+                    width:parent.width
+                    horizontalAlignment: Text.AlignHCenter;
+                    font.family: "Ubuntu"
+                    fontSizeMode: Text.Fit;
+                    minimumPixelSize: 10;
+                    font.pixelSize: extendedInfoBox.height/11
+                    text: modelData.teachersToString
+                }
+                Label{
+                    width:parent.width
+                    maximumLineCount:3
+                    horizontalAlignment: Text.AlignHCenter;
+                    font.family: "Ubuntu"
+                    elide:Text.ElideMiddle
+                    fontSizeMode: Text.Fit;
+                    minimumPixelSize: 10;
+                    font.pixelSize: extendedInfoBox.height/11
+                    text: modelData.groupsToString
+                }
+            }
+            MouseArea{
+                anchors.fill: parent
+                hoverEnabled : true
+                onEntered: extendedInfoCross.opacity=1;
+                onExited: extendedInfoCross.opacity=0;
+            }
+            Rectangle
+            {
+                id:extendedInfoCross
+                anchors.right: parent.right
+                anchors.top:parent.top
+                anchors.topMargin: 4
+                anchors.rightMargin: 4
+                width:13
+                height:13
+                opacity: 0
+                color: "transparent"
+                Image{
+                    anchors.fill:parent
+                    source:"qrc:/new/ico/ico/delete.png"
+                    width: 13
+                    height: 13
+                }
+
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        extendedInfo.visible=0;
+                    }
+                }
+
+            }
+
+        }
+    }
+    MouseArea{
+        x:-groupListRect.width
+
+        y:0
+        height:root.height
+        width: root.width
+        onClicked: extendedInfo.visible=0;
+    }
 }
 }
 

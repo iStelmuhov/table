@@ -4,7 +4,7 @@
 #include "groupbuilder.h"
 
 GroupsData::GroupsData(QObject *parent) :
-    QObject(parent),m_groups(QList<GroupYearData*>()),activeGroup(nullptr)
+    QObject(parent),m_groups(QList<GroupYearData*>()),activeGroup(nullptr),m_isUpading(false)
 {
 
 }
@@ -47,6 +47,11 @@ void GroupsData::deleteGroup(QString name)
                 if(activeGroup->name()==name)
                     setActive(0);
 
+            QFile file;
+            file.setFileName(name+".json");
+            if(QFile::exists(file.fileName()))
+                file.remove();
+
             delete m_groups[i];
             m_groups.removeAt(i);
             emit listChanged();
@@ -83,14 +88,18 @@ void GroupsData::rePaintList()
 
 void GroupsData::update(QString _name, int _id)
 {
+    if(!m_isUpading){
+    m_isUpading=true;
     builder=new GroupBuilder;
     connect(builder,SIGNAL(groupReady(GroupYearData*)),this,SLOT(addNewGroup(GroupYearData*)));
     connect(builder,SIGNAL(rePaint()),this,SLOT(rePaintList()));
+    connect(builder,SIGNAL(downloadFullyComplete()),this,SLOT(changeStatus()));
     for(auto it:m_groups)
        if(_name.toUpper()==it->name())
             deleteGroup(it->name());
 
     builder->buildRequest(_name,_id);
+    }
 }
 
 
@@ -134,6 +143,7 @@ void GroupsData::addNewGroup(GroupYearData *_group)
 {
     addGroup(_group);
     emit listChanged();
+    emit groupLoaded();
 }
 
 void GroupsData::newGroup(QString _name, int _id, bool internet)
@@ -162,4 +172,9 @@ void GroupsData::newGroupFromFile(QString _name)
 
     builder->buildRequest(_name,-1,false);
 
+}
+
+void GroupsData::changeStatus()
+{
+    m_isUpading=false;
 }

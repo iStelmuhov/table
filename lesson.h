@@ -3,6 +3,7 @@
 
 
 #include <QtCore>
+#include <QColor>
 
 struct Teacher{
     QString full_name;
@@ -87,6 +88,12 @@ public:
     Q_PROPERTY(QString lessonStartEndTime READ lessonStartEndTime NOTIFY lessonStartEndTimeChanged)
     QString lessonStartEndTime();
 
+    Q_PROPERTY(QString teachersToString READ teachersToString NOTIFY teachersToStringChanged)
+    QString teachersToString();
+
+    Q_PROPERTY(QString groupsToString READ groupsToString NOTIFY groupsToStringChanged)
+    QString groupsToString();
+
 signals:
     void briefChanged();
     void titleChanged();
@@ -101,6 +108,8 @@ signals:
     void typeChanged();
     void colorChanged();
     void lessonStartEndTimeChanged();
+    void teachersToStringChanged();
+    void groupsToStringChanged();
 };
 
 #endif // LESSON_H

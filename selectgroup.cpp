@@ -9,7 +9,11 @@ SelectGroup::SelectGroup(QWidget *parent) :
     setWindowTitle("Выбор группы");
     ui->setupUi(this);
     ui->listWidget->sortItems(Qt::AscendingOrder);
-    loadFile("get_schem.json",(QUrl)"http://cist.kture.kharkov.ua/ias/app/tt/get_faculties");
+    loadFile("get_schem.json",(QUrl)"http://cist.nure.ua/ias/app/tt/get_faculties");
+
+    QPixmap image(":/new/ico/ico/Trex2.png");
+    ui->image->setPixmap(image);
+    ui->image->setVisible(false);
 }
 
 SelectGroup::~SelectGroup()
@@ -19,9 +23,10 @@ SelectGroup::~SelectGroup()
 
 void SelectGroup::loadFile(QString filename,QUrl fileUrl)
 {
-
+    m_loaded=false;
     downloader = new QDownloader;
     connect(downloader,SIGNAL(fileCreated()),this,SLOT(fileLoaded()));
+    connect(downloader,SIGNAL(loadError()),this,SLOT(loadError()));
     downloader->setFileName(filename);
     downloader->setUrl(fileUrl);
     downloader->startDownload();
@@ -30,6 +35,7 @@ void SelectGroup::loadFile(QString filename,QUrl fileUrl)
 
 void SelectGroup::fileLoaded()
 {
+    m_loaded=true;
    if(downloader->getFileName()=="get_schem.json")
       {
             loadList((QString)"get_schem.json",(QString)"faculties",(QString)"faculty_name");
@@ -47,7 +53,10 @@ void SelectGroup::loadList(QString fileName,QString _docParce,QString _arrayParc
 {
     QFile file;
     file.setFileName(fileName);
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        loadError();
+        return;
+    }
     jSonText = file.readAll();
     file.close();
 
@@ -85,7 +94,7 @@ void SelectGroup::on_listWidget_doubleClicked()
     if(downloader->getFileName()=="get_schem.json")
     {
     QString faculties = ui->listWidget->currentItem()->text();
-    QString url("http://cist.kture.kharkov.ua/ias/app/tt/get_groups?faculty_id=");
+    QString url("http://cist.nure.ua/ias/app/tt/get_groups?faculty_id=");
     ui->listWidget->clear();
 
 
@@ -120,10 +129,28 @@ void SelectGroup::on_listWidget_clicked()
 
 void SelectGroup::on_backButton_clicked()
 {
-    loadFile("get_schem.json",(QUrl)"http://cist.kture.kharkov.ua/ias/app/tt/get_faculties");
+    loadFile("get_schem.json",(QUrl)"http://cist.nure.ua/ias/app/tt/get_faculties");
 }
 
 void SelectGroup::on_addButton_clicked()
 {
     on_listWidget_doubleClicked();
+}
+
+void SelectGroup::on_refreshButton_clicked()
+{
+    ui->image->setVisible(false);
+    loadFile("get_schem.json",(QUrl)"http://cist.nure.ua/ias/app/tt/get_faculties");
+
+}
+
+void SelectGroup::loadError()
+{
+
+    ui->image->setVisible(true);
+}
+
+void SelectGroup::on_cancelButton_clicked()
+{
+    close();
 }

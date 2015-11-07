@@ -1,5 +1,15 @@
 #include "groupbuilder.h"
 
+
+QDownloader *GroupBuilder::getDownloader() const
+{
+    return downloader;
+}
+
+void GroupBuilder::setDownloader(QDownloader *value)
+{
+    downloader = value;
+}
 GroupBuilder::GroupBuilder(QObject *parent)
     :QObject(parent),id(-1),loadFromInternet(false)
 {
@@ -11,6 +21,8 @@ GroupBuilder::GroupBuilder(QObject *parent)
         m_days[time]=new DayData(time);
         time=time.addDays(1);
      }
+
+
 }
 
 GroupBuilder::GroupBuilder(int group_id,QString group_name,bool internet,QObject *parent)
@@ -44,6 +56,7 @@ void GroupBuilder::loadFileFromInternet()
 {
     downloader = new QDownloader;
     connect(downloader,SIGNAL(fileCreated()),this,SLOT(fileLoaded()));
+    connect(downloader,SIGNAL(downloadComplete()),this,SLOT(loadFullyComplete()));
     downloader->setFileName(name+".json");
     downloader->setUrl("http://cist.nure.ua/ias/app/tt/P_API_EVENT_JSON?timetable_id="+QString::number(id));
     downloader->startDownload();
@@ -73,6 +86,11 @@ void GroupBuilder::buildRequest(QString _name, int _id,bool internet)
     setId(_id);
     setLoadFromInternet(internet);
     getGroup();
+}
+
+void GroupBuilder::loadFullyComplete()
+{
+    emit downloadFullyComplete();
 }
 
 

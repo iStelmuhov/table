@@ -41,6 +41,9 @@ public:
 
     int getId() const;
     void setId(int value);
+    QDownloader *getDownloader() const;
+    void setDownloader(QDownloader *value);
+
 protected:
 
     void build();
@@ -54,9 +57,11 @@ signals:
     void jSonReady();
     void groupReady(GroupYearData * group);
     void rePaint();
+    void downloadFullyComplete();
 public slots:
     void fileLoaded();
     void buildRequest(QString _name, int _id, bool internet=true);
+    void loadFullyComplete();
 
 };
 

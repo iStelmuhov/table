@@ -63,6 +63,8 @@ void QDownloader::httpReadyRead()
 void QDownloader::downloadProgressUpadte(qint64 bytesRead, qint64 bytesTotal)
 {
     qDebug()<<bytesRead<<" "<<bytesTotal;
+    if(bytesRead==bytesTotal)
+        emit downloadComplete();
     emit downloadProgress(bytesRead,bytesTotal);
 }
 

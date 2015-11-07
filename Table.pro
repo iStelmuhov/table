@@ -35,3 +35,5 @@ HEADERS += \
 
 FORMS += \
     selectgroup.ui
+
+DISTFILES +=

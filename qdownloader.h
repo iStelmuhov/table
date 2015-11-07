@@ -30,6 +30,7 @@ signals:
     void downloadProgress(qint64,qint64);
     void fileCreated();
     void loadError();
+    void downloadComplete();
 private:
     QUrl url;
     QNetworkAccessManager * manager;

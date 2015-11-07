@@ -24,11 +24,11 @@ QString Lesson::color()
     case 11:return "green";break;
     case 12:return "green";break;
 
-    case 20: return "purple";break;
-    case 21: return "purple";break;
-    case 22: return "purple";break;
-    case 23: return "purple";break;
-    case 24: return "purple";break;
+    case 20: return "#ba55d3";break;
+    case 21: return "#ba55d3";break;
+    case 22: return "#ba55d3";break;
+    case 23: return "#ba55d3";break;
+    case 24: return "#ba55d3";break;
 
     case 30: return "white";break;
     case 31: return "white";break;
@@ -49,6 +49,26 @@ QString Lesson::color()
 QString Lesson::lessonStartEndTime()
 {
     return m_startTime.time().toString("hh:mm")+" — " + m_endTime.time().toString("hh:mm");
+}
+
+QString Lesson::teachersToString()
+{
+    QString outString;
+    for(auto it:m_teachers)
+        outString.append(it.full_name+", ");
+
+    outString.remove(outString.length()-2,2);
+    return outString;
+}
+
+QString Lesson::groupsToString()
+{
+    QString outString;
+    for(auto it:m_groups)
+        outString.append(it.toString()+", ");
+
+    outString.remove(outString.length()-2,2);
+    return outString;
 }
 
 Lesson::Lesson()

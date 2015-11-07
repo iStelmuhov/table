@@ -35,6 +35,11 @@ private slots:
 
     void on_addButton_clicked();
 
+    void on_refreshButton_clicked();
+
+    void loadError();
+    void on_cancelButton_clicked();
+
 signals:
     void groupSelected(QString,int);
 private:
@@ -44,6 +49,7 @@ private:
 
     void loadFile();
     int getID(QString typeName1,QString typeName2);
+    bool m_loaded;
 };
 
 #endif // SELECTGROUP_H
